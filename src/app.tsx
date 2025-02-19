@@ -1,10 +1,11 @@
-import { useState } from "react";
 import reactLogo from "./assets/react.svg";
 import viteLogo from "/vite.svg";
 import "./app.scss";
+import { BrowserRouter, useSearchParams } from "react-router";
 
-function App() {
-  const [count, setCount] = useState(0);
+function LittleGuy() {
+  const [searchParams, setSearchParams] = useSearchParams({ count: (0).toString() });
+  const count = +(searchParams.get("count") ?? 0);
 
   return (
     <>
@@ -16,15 +17,37 @@ function App() {
           <img src={reactLogo} className="logo react" alt="React logo" />
         </a>
       </div>
-      <h1>Vite + React</h1>
+      <h1>Little Game</h1>
       <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>count is {count}</button>
+        <button
+          onClick={() => {
+            const nextCount = count + 1;
+
+            setSearchParams((prev) => {
+              prev.set("count", nextCount.toString());
+
+              return prev;
+            });
+          }}
+        >
+          count is {count}
+        </button>
         <p>
           Edit <code>src/App.tsx</code> and save to test HMR
         </p>
       </div>
       <p className="read-the-docs">Click on the Vite and React logos to learn more</p>
     </>
+  );
+}
+
+function App() {
+  return (
+    <BrowserRouter>
+      <main className="app">
+        <LittleGuy />
+      </main>
+    </BrowserRouter>
   );
 }
 
