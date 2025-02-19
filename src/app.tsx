@@ -1,4 +1,4 @@
-import { uniqueId } from "lodash-es";
+import { random, uniqueId } from "lodash-es";
 import { BrowserRouter, useSearchParams } from "react-router";
 import { useEffect, useMemo, useState } from "react";
 import "./app.scss";
@@ -20,14 +20,35 @@ class Game {
       this.grid[i] = this.grid[i] || [];
 
       for (let j = 0; j < GRID_SIZE; j++) {
-        this.grid[i][j] = new Square();
+        this.grid[i][j] = new Square({
+          status: random(0, 10) === 0 ? SquareStatus.Wall : SquareStatus.Open,
+        });
       }
     }
   }
 }
 
+enum SquareStatus {
+  Open = "open",
+  Wall = "wall",
+  Goal = "goal",
+}
+
 class Square {
   id = uniqueId("square");
+  status: SquareStatus;
+
+  constructor({ status }: { status: SquareStatus }) {
+    this.status = status;
+  }
+
+  isWall() {
+    return this.status === SquareStatus.Wall;
+  }
+
+  isOpen() {
+    return this.status === SquareStatus.Open;
+  }
 }
 
 function LittleGame() {
@@ -46,22 +67,50 @@ function LittleGame() {
       switch (event.code) {
         case "ArrowUp":
           setPosition(([x, y]) => {
-            return [x, Math.max(0, y - 1)];
+            const targetY = Math.max(0, y - 1);
+            const targetSquare = game.grid[x][targetY];
+
+            if (targetSquare.isWall()) {
+              return [x, y];
+            }
+
+            return [x, targetY];
           });
           break;
         case "ArrowDown":
           setPosition(([x, y]) => {
-            return [x, Math.min(GRID_SIZE - 1, y + 1)];
+            const targetY = Math.min(GRID_SIZE - 1, y + 1);
+            const targetSquare = game.grid[x][targetY];
+
+            if (targetSquare.isWall()) {
+              return [x, y];
+            }
+
+            return [x, targetY];
           });
           break;
         case "ArrowLeft":
           setPosition(([x, y]) => {
+            const targetX = Math.max(0, x - 1);
+            const targetSquare = game.grid[targetX][y];
+
+            if (targetSquare.isWall()) {
+              return [x, y];
+            }
+
             return [Math.max(0, x - 1), y];
           });
           break;
         case "ArrowRight":
           setPosition(([x, y]) => {
-            return [Math.min(GRID_SIZE - 1, x + 1), y];
+            const targetX = Math.min(GRID_SIZE - 1, x + 1);
+            const targetSquare = game.grid[targetX][y];
+
+            if (targetSquare.isWall()) {
+              return [x, y];
+            }
+
+            return [targetX, y];
           });
           break;
         default:
@@ -74,7 +123,7 @@ function LittleGame() {
     return () => {
       window.removeEventListener("keydown", onKeyDown);
     };
-  }, []);
+  }, [game.grid]);
 
   return (
     <div className={"little-game"}>
@@ -91,7 +140,11 @@ function LittleGame() {
                 {squares.map((square, colIndex) => {
                   return (
                     <div key={square.id || colIndex} className={"square"}>
-                      {rowIndex === playerX && colIndex === playerY ? "Occupied" : "Open"}
+                      {rowIndex === playerX && colIndex === playerY
+                        ? "Occupied"
+                        : square.isWall()
+                          ? "Wall"
+                          : "Open"}
                     </div>
                   );
                 })}
