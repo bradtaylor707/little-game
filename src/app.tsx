@@ -32,6 +32,8 @@ function LittleGame() {
   });
 
   const [position, setPosition] = useState<[number, number]>([0, 0]);
+  const playerX = position[0];
+  const playerY = position[1];
 
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
@@ -83,7 +85,7 @@ function LittleGame() {
                 {squares.map((square, colIndex) => {
                   return (
                     <div key={square.id || colIndex} className={"square"}>
-                      {rowIndex === position[0] && colIndex === position[1] ? "Occupied" : "Open"}
+                      {rowIndex === playerX && colIndex === playerY ? "Occupied" : "Open"}
                     </div>
                   );
                 })}
