@@ -1,5 +1,5 @@
 import { uniqueId } from "lodash-es";
-import { BrowserRouter } from "react-router";
+import { BrowserRouter, useSearchParams } from "react-router";
 import { useEffect, useMemo, useState } from "react";
 import "./app.scss";
 
@@ -31,7 +31,9 @@ class Square {
 }
 
 function LittleGame() {
-  const game = useMemo(() => new Game(), []);
+  const [searchParams] = useSearchParams({ gridSize: GRID_SIZE.toString() });
+  const gridSize = +(searchParams.get("gridSize") ?? GRID_SIZE);
+  const game = useMemo(() => new Game({ gridSize }), [gridSize]);
 
   const [position, setPosition] = useState<Position>([0, 0]);
   const playerX = position[0];
