@@ -11,5 +11,21 @@
 
   .square {
     padding: 0.5rem;
+
+    &.player {
+      background-color: orange;
+    }
+
+    &.wall {
+      background-color: lightcoral;
+    }
+
+    &.open {
+      background-color: lightblue;
+    }
+
+    &.goal {
+      background-color: lightgreen;
+    }
   }
 }

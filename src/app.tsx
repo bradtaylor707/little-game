@@ -2,8 +2,9 @@ import { random, uniqueId } from "lodash-es";
 import { BrowserRouter, useSearchParams } from "react-router";
 import { useEffect, useMemo, useState } from "react";
 import "./app.scss";
+import clsx from "clsx";
 
-const GRID_SIZE = 10;
+const GRID_SIZE = 12;
 
 type Position = [number, number];
 
@@ -16,15 +17,27 @@ class Game {
   constructor({ gridSize = GRID_SIZE } = {}) {
     this.gridSize = gridSize;
 
+    const goalX = random(GRID_SIZE - 1);
+    const goalY = random(GRID_SIZE - 1);
+
     for (let i = 0; i < GRID_SIZE; i++) {
       this.grid[i] = this.grid[i] || [];
 
       for (let j = 0; j < GRID_SIZE; j++) {
         this.grid[i][j] = new Square({
-          status: random(0, 10) === 0 ? SquareStatus.Wall : SquareStatus.Open,
+          status:
+            i === goalX && j === goalY
+              ? SquareStatus.Goal
+              : random(3) === 0
+                ? SquareStatus.Wall
+                : SquareStatus.Open,
         });
       }
     }
+  }
+
+  isOver() {
+    return false;
   }
 }
 
@@ -48,6 +61,10 @@ class Square {
 
   isOpen() {
     return this.status === SquareStatus.Open;
+  }
+
+  isGoal() {
+    return this.status === SquareStatus.Goal;
   }
 }
 
@@ -139,7 +156,16 @@ function LittleGame() {
               <div key={rowIndex} className={"row"}>
                 {squares.map((square, colIndex) => {
                   return (
-                    <div key={square.id || colIndex} className={"square"}>
+                    <div
+                      key={square.id || colIndex}
+                      className={clsx({
+                        square: true,
+                        wall: square.isWall(),
+                        open: square.isOpen(),
+                        goal: square.isGoal(),
+                        player: rowIndex === playerX && colIndex === playerY,
+                      })}
+                    >
                       {rowIndex === playerX && colIndex === playerY
                         ? "Occupied"
                         : square.isWall()
