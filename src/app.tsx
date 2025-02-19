@@ -13,24 +13,21 @@ class Game {
   created = new Date().toISOString();
   grid: Array<Square[]> = [];
   gridSize = GRID_SIZE;
+  goalX = random(GRID_SIZE - 1);
+  goalY = random(GRID_SIZE - 1);
 
   constructor({ gridSize = GRID_SIZE } = {}) {
     this.gridSize = gridSize;
-
-    const goalX = random(GRID_SIZE - 1);
-    const goalY = random(GRID_SIZE - 1);
 
     for (let i = 0; i < GRID_SIZE; i++) {
       this.grid[i] = this.grid[i] || [];
 
       for (let j = 0; j < GRID_SIZE; j++) {
+        const goalStatus = i === this.goalX && j === this.goalY && SquareStatus.Goal;
+        const wallStatus = random(3) === 0 && SquareStatus.Wall;
+
         this.grid[i][j] = new Square({
-          status:
-            i === goalX && j === goalY
-              ? SquareStatus.Goal
-              : random(3) === 0
-                ? SquareStatus.Wall
-                : SquareStatus.Open,
+          status: goalStatus || wallStatus || SquareStatus.Open,
         });
       }
     }
@@ -141,6 +138,12 @@ function LittleGame() {
       window.removeEventListener("keydown", onKeyDown);
     };
   }, [game.grid]);
+
+  useEffect(() => {
+    if (game.goalX === playerX && game.goalY === playerY) {
+      alert("Game Over!");
+    }
+  }, [game.goalX, game.goalY, playerX, playerY]);
 
   return (
     <div className={"little-game"}>
