@@ -24,7 +24,7 @@ class Game {
 
       for (let j = 0; j < GRID_SIZE; j++) {
         const goalStatus = i === this.goalX && j === this.goalY && SquareStatus.Goal;
-        const wallStatus = random(3) === 0 && SquareStatus.Wall;
+        const wallStatus = goalStatus === false && random(3) === 0 && SquareStatus.Wall;
 
         this.grid[i][j] = new Square({
           status: goalStatus || wallStatus || SquareStatus.Open,
