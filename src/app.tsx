@@ -17,7 +17,7 @@ class Square {
 }
 
 function LittleGame() {
-  const [grid, _setGrid] = useState(() => {
+  const [grid] = useState(() => {
     const _grid: Array<Square[]> = [];
 
     for (let i = 0; i < GRID_SIZE; i++) {
@@ -39,13 +39,24 @@ function LittleGame() {
 
       switch (event.code) {
         case "ArrowUp":
-          debugger;
+          setPosition(([x, y]) => {
+            return [x, Math.max(0, y - 1)];
+          });
           break;
         case "ArrowDown":
+          setPosition(([x, y]) => {
+            return [x, Math.min(GRID_SIZE - 1, y + 1)];
+          });
           break;
         case "ArrowLeft":
+          setPosition(([x, y]) => {
+            return [Math.max(0, x - 1), y];
+          });
           break;
         case "ArrowRight":
+          setPosition(([x, y]) => {
+            return [Math.min(GRID_SIZE - 1, x + 1), y];
+          });
           break;
         default:
           break;
@@ -72,7 +83,7 @@ function LittleGame() {
                 {squares.map((square, colIndex) => {
                   return (
                     <div key={square.id || colIndex} className={"square"}>
-                      Square: {square.status}
+                      {rowIndex === position[0] && colIndex === position[1] ? "Occupied" : "Open"}
                     </div>
                   );
                 })}
