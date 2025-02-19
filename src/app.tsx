@@ -1,37 +1,39 @@
 import { uniqueId } from "lodash-es";
 import { BrowserRouter } from "react-router";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import "./app.scss";
 
 const GRID_SIZE = 10;
 
-enum Status {
-  Open,
-  Occupied,
+type Position = [number, number];
+
+class Game {
+  id = uniqueId("game");
+  created = new Date().toISOString();
+  grid: Array<Square[]> = [];
+  gridSize = GRID_SIZE;
+
+  constructor({ gridSize = GRID_SIZE } = {}) {
+    this.gridSize = gridSize;
+
+    for (let i = 0; i < GRID_SIZE; i++) {
+      this.grid[i] = this.grid[i] || [];
+
+      for (let j = 0; j < GRID_SIZE; j++) {
+        this.grid[i][j] = new Square();
+      }
+    }
+  }
 }
 
 class Square {
   id = uniqueId("square");
-
-  constructor(public status: Status = Status.Open) {}
 }
 
 function LittleGame() {
-  const [grid] = useState(() => {
-    const _grid: Array<Square[]> = [];
+  const game = useMemo(() => new Game(), []);
 
-    for (let i = 0; i < GRID_SIZE; i++) {
-      _grid[i] = _grid[i] || [];
-
-      for (let j = 0; j < GRID_SIZE; j++) {
-        _grid[i][j] = new Square();
-      }
-    }
-
-    return _grid;
-  });
-
-  const [position, setPosition] = useState<[number, number]>([0, 0]);
+  const [position, setPosition] = useState<Position>([0, 0]);
   const playerX = position[0];
   const playerY = position[1];
 
@@ -75,11 +77,13 @@ function LittleGame() {
   return (
     <div className={"little-game"}>
       <div className={"debug-container"}>
-        <div>Grid Size: {GRID_SIZE}</div>
+        <div>Game ID: {game.id}</div>
+        <div>Created: {game.created}</div>
+        <div>Grid Size: {game.gridSize}</div>
       </div>
       <div className={"game-container"}>
         <div className={"game"}>
-          {grid.map((squares, rowIndex) => {
+          {game.grid.map((squares, rowIndex) => {
             return (
               <div key={rowIndex} className={"row"}>
                 {squares.map((square, colIndex) => {
