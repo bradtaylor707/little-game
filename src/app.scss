@@ -11,21 +11,45 @@
 
   .square {
     padding: 0.5rem;
+    min-height: 2rem;
+    min-width: 2rem;
 
-    &.player {
-      background-color: orange;
+    &.open {
+      background-color: lightblue;
     }
 
     &.wall {
       background-color: lightcoral;
     }
 
-    &.open {
-      background-color: lightblue;
-    }
-
     &.goal {
       background-color: lightgreen;
+    }
+
+    &.player {
+      background-color: orange;
+    }
+  }
+}
+
+.other {
+  .result {
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    background-color: purple;
+    transition: background-color 0.2s;
+
+    &.red {
+      background-color: red;
+    }
+
+    &.yellow {
+      background-color: yellow;
+    }
+
+    &.green {
+      background-color: green;
     }
   }
 }

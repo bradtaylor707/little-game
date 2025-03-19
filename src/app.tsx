@@ -168,13 +168,7 @@ function LittleGame() {
                         goal: square.isGoal(),
                         player: rowIndex === playerX && colIndex === playerY,
                       })}
-                    >
-                      {rowIndex === playerX && colIndex === playerY
-                        ? "Occupied"
-                        : square.isWall()
-                          ? "Wall"
-                          : "Open"}
-                    </div>
+                    />
                   );
                 })}
               </div>
@@ -186,11 +180,73 @@ function LittleGame() {
   );
 }
 
+function sumStrings(a: string | null | undefined, b: string | null | undefined) {
+  a ??= "";
+  b ??= "";
+
+  a = a.split("").reverse().join("");
+  b = b.split("").reverse().join("");
+
+  const len = Math.max(a.length, b.length);
+
+  let carry = 0;
+  let out = "";
+
+  for (let i = 0; i < len || carry; i++) {
+    const aDigit = Number(a[i] || "0");
+    const bDigit = Number(b[i] || "0");
+
+    const localSum = aDigit + bDigit + carry;
+
+    out = (localSum % 10) + out;
+
+    if (localSum / 10 >= 1) {
+      carry = 1;
+    } else {
+      carry = 0;
+    }
+  }
+
+  return out;
+}
+
+function StringAdder() {
+  const [a, setA] = useState<string>();
+  const [b, setB] = useState<string>();
+
+  return (
+    <div>
+      <h2>String Adder</h2>
+      <h4>Sum: {sumStrings(a, b)}</h4>
+      <h5>Expected: {Number(a || 0) + Number(b || 0)}</h5>
+      <div>
+        <input
+          type={"number"}
+          onChange={(event) => {
+            setA(event.target.value);
+          }}
+          value={a}
+        />
+      </div>
+      <div>
+        <input
+          type={"number"}
+          onChange={(event) => {
+            setB(event.target.value);
+          }}
+          value={b}
+        />
+      </div>
+    </div>
+  );
+}
+
 function App() {
   return (
     <BrowserRouter>
       <main className={"app"}>
         <LittleGame />
+        <StringAdder />
       </main>
     </BrowserRouter>
   );
