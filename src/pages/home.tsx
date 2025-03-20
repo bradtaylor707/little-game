@@ -5,13 +5,16 @@ export default function Home() {
     <div id={"home"}>
       <ul>
         <li>
+          <Link to={"todos"}>TODOS!!!!</Link>
+        </li>
+        <li>
           <Link to={"maze"}>Maze game</Link>
         </li>
         <li>
           <Link to={"add-strings"}>Add Strings</Link>
-        </li>{" "}
+        </li>
         <li>
-          <Link to={"jotai"}>Jotai State Management</Link>
+          <Link to={"jotai"}>Future Message</Link>
         </li>
       </ul>
     </div>
