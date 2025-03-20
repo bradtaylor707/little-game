@@ -7,5 +7,5 @@ export type Todo = {
 export type FilterID = "all" | "incomplete" | "complete";
 
 export type Filter = {
-  name: FilterID;
+  value: FilterID;
 };

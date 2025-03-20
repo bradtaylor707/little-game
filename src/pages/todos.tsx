@@ -2,22 +2,17 @@ import { useAtom } from "jotai";
 import { todosFilterAtom, todosAtom } from "../store";
 import { memo, useCallback, useMemo, useRef, useState } from "react";
 import { Filter, FilterID, Todo } from "../types";
-
-function wait(ms: number) {
-  return new Promise<void>((resolve) => {
-    setTimeout(resolve, ms);
-  });
-}
+import { wait } from "../utils";
 
 const filters: Array<Filter> = [
   {
-    name: "all",
+    value: "all",
   },
   {
-    name: "incomplete",
+    value: "incomplete",
   },
   {
-    name: "complete",
+    value: "complete",
   },
 ];
 
@@ -96,40 +91,41 @@ export default function Todos() {
     [setTodos],
   );
 
-  const post = async () => {
-    const title = (inputRef.current?.value ?? "").trim();
-
-    if (!title /* and validate structure */) {
-      return;
-    }
-
-    setIsPosting(true);
-
-    await wait(250);
-
-    setTodos((prev) => {
-      return [
-        ...prev,
-        {
-          completed: null,
-          created: new Date().toISOString(),
-          title,
-        },
-      ];
-    });
-
-    setIsPosting(false);
-
-    if (inputRef.current) {
-      inputRef.current.value = "";
-    }
-  };
-
   return (
     <div id={"todos"}>
       <div className={"flex align-items-center"}>
         <input ref={inputRef} disabled={isPosting} type={"text"} maxLength={120} />
-        <button disabled={isPosting} onClick={post}>
+        <button
+          disabled={isPosting}
+          onClick={async () => {
+            const title = (inputRef.current?.value ?? "").trim();
+
+            if (!title /* and validate structure */) {
+              return;
+            }
+
+            setIsPosting(true);
+
+            await wait(250);
+
+            setTodos((prev) => {
+              return [
+                ...prev,
+                {
+                  completed: null,
+                  created: new Date().toISOString(),
+                  title,
+                },
+              ];
+            });
+
+            setIsPosting(false);
+
+            if (inputRef.current) {
+              inputRef.current.value = "";
+            }
+          }}
+        >
           Save
         </button>
         <div
@@ -139,20 +135,18 @@ export default function Todos() {
             setFilter(target.value as FilterID);
           }}
         >
-          {filters.map(({ name }) => {
-            return (
-              <div key={name}>
-                <input
-                  id={`radio-${name}`}
-                  type={"radio"}
-                  defaultChecked={name === filter}
-                  name={"filter-radio-group"}
-                  value={name}
-                />
-                <label htmlFor={`radio-${name}`}>{name.toUpperCase()}</label>
-              </div>
-            );
-          })}
+          {filters.map(({ value }) => (
+            <div key={value}>
+              <input
+                id={`radio-${value}`}
+                type={"radio"}
+                defaultChecked={value === filter}
+                name={"filter-radio-group"}
+                value={value}
+              />
+              <label htmlFor={`radio-${value}`}>{value.toUpperCase()}</label>
+            </div>
+          ))}
         </div>
       </div>
       <div>
