@@ -9,6 +9,9 @@ export default function Home() {
         </li>
         <li>
           <Link to={"add-strings"}>Add Strings</Link>
+        </li>{" "}
+        <li>
+          <Link to={"jotai"}>Jotai State Management</Link>
         </li>
       </ul>
     </div>
