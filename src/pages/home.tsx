@@ -8,6 +8,9 @@ export default function Home() {
           <Link to={"todos"}>TODOS!!!!</Link>
         </li>
         <li>
+          <Link to={"todos2"}>Todos run it back again</Link>
+        </li>
+        <li>
           <Link to={"maze"}>Maze game</Link>
         </li>
         <li>
