@@ -1,5 +1,5 @@
 import { FilterID, Todo } from "../types";
-import { Fragment, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 
 const FILTERS: FilterID[] = ["all", "incomplete", "complete"];
 
@@ -63,7 +63,7 @@ export default function Todos2() {
               const id = "radio-" + filterId;
 
               return (
-                <Fragment key={filterId}>
+                <div key={filterId}>
                   <input
                     id={id}
                     defaultChecked={filterId === filter}
@@ -75,7 +75,7 @@ export default function Todos2() {
                     value={filterId}
                   />
                   <label htmlFor={id}>{filterId}</label>
-                </Fragment>
+                </div>
               );
             })}
           </div>
@@ -83,11 +83,13 @@ export default function Todos2() {
       </section>
       <section>
         <input
+          id={"title-input"}
           type={"text"}
           maxLength={100}
           value={inputValue}
           onChange={(evt) => setInputValue(evt.target.value)}
         />
+        <label htmlFor={"title-input"}>Create A Task</label>
         <button
           onClick={() => {
             post(inputValue);
@@ -104,6 +106,7 @@ export default function Todos2() {
               <div key={created}>
                 <div>
                   <input
+                    id={"checkbox-" + created}
                     type={"checkbox"}
                     checked={completed != null}
                     onChange={(evt) => {
@@ -112,6 +115,7 @@ export default function Todos2() {
                       updateStatus(created, done);
                     }}
                   />
+                  <label htmlFor={"checkbox-" + created}>Task Done</label>
                 </div>
                 <div>
                   <div>{title}</div>
