@@ -1,12 +1,10 @@
-import { useMemo, useRef, useState } from "react";
+import { useMemo, useState } from "react";
 
 const items = ["Eric", "John", "Brad", "Steve", "Rachel", "Anna"];
 
 export default function Search() {
   const [searchValue, setSearchValue] = useState("");
   const [savedSearches, setSavedSearches] = useState(() => new Set<string>());
-
-  const inputRef = useRef<HTMLInputElement>(null);
 
   const search = (value?: string) => {
     const v = (value ?? searchValue).trim();
@@ -56,7 +54,6 @@ export default function Search() {
         >
           <label htmlFor={"search-input"}>Search</label>
           <input
-            ref={inputRef}
             id={"search-input"}
             name={"searchField"}
             type={"text"}
