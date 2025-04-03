@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { escapeRegExp } from "lodash-es";
 
 const items = ["Eric", "John", "Brad", "Steve", "Rachel", "Anna"];
 
@@ -19,10 +20,10 @@ export default function Search() {
   };
 
   const shownItems = useMemo(() => {
-    const lowerSearchValue = searchValue.toLowerCase();
+    const searchRegex = new RegExp(escapeRegExp(searchValue), "i");
 
     return items.filter((item) => {
-      return item.toLowerCase().includes(lowerSearchValue);
+      return searchRegex.test(item);
     });
   }, [searchValue]);
 
