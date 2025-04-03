@@ -3,8 +3,9 @@ import AddStrings from "./pages/add-strings";
 import Home from "./pages/home";
 import Maze from "./pages/maze";
 import Jotai from "./pages/jotai";
-import Todos from "./pages/todos";
 import Todos2 from "./pages/todos-2";
+import Todos from "./pages/todos";
+import Search from "./pages/search";
 import "./app.scss";
 
 function App() {
@@ -18,6 +19,7 @@ function App() {
           <Route path={"jotai"} element={<Jotai />} />
           <Route path={"todos"} element={<Todos />} />
           <Route path={"todos2"} element={<Todos2 />} />
+          <Route path={"search"} element={<Search />} />
         </Routes>
       </BrowserRouter>
     </main>

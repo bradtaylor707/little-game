@@ -19,6 +19,9 @@ export default function Home() {
         <li>
           <Link to={"jotai"}>Future Message</Link>
         </li>
+        <li>
+          <Link to={"search"}>Search</Link>
+        </li>
       </ul>
     </div>
   );
